@@ -1,0 +1,40 @@
+name: jax_robot_learning
+
+services:
+  # ===========
+  # CPU service
+  # ===========
+  jax_robot_learning: &jax_robot_learning
+    # =====
+    # Image
+    # =====
+    image: diegoferigo/jax_robot_learning:latest
+    build:
+      args:
+        from: ubuntu:jammy
+        cudatoolkit_version: "11.2.*"
+      context: .
+      dockerfile: Dockerfile
+    # =========
+    # Container
+    # =========
+    container_name: jax_robot_learning
+    tty: true
+    init: true
+    stdin_open: true
+    user: ${DOCKER_UID-1000}:${DOCKER_GID:-1000}
+    network_mode: host
+    volumes:
+      - ${NOTEBOOK_FOLDER?path to the jupyter notebook folder}:/jupyter
+  # ===========
+  # GPU service
+  # ===========
+  jax_robot_learning_nvidia:
+    <<: *jax_robot_learning
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
