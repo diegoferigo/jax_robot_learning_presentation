@@ -40,7 +40,7 @@ RUN echo 'function activate_conda() {' >> /etc/bash.bashrc &&\
 # Install CUDA Toolkit
 ARG cudatoolkit_version="11.2.*"
 RUN echo "cudatoolkit $cudatoolkit_version" >> $CONDA_PREFIX/conda-meta/pinned &&\
-    mamba install -y cudatoolkit cuda-nvcc -c conda-forge -c nvidia &&\
+    mamba install -y cudatoolkit cuda-nvcc -c nvidia -c conda-forge &&\
     conda clean -afy
 
 # Allow installing CUDA packages also if no GPU is detected in Dockerfile:
